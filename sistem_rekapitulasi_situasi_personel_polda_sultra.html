@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM-SITUM PERSONEL POLDA SULTRA DAN JAJARAN</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        polri: {
+                            gold: '#D4AF37',
+                            yellow: '#FFC72C',
+                            dark: '#080E1E',
+                            navy: '#0F172A',
+                            slate: '#1E293B',
+                            red: '#DC2626'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080E1E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+        .wa-bg {
+            background-color: #0b141a;
+            background-image: radial-gradient(#111b21 1px, transparent 0);
+            background-size: 16px 16px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-black">
+
+    <!-- Header Navigation Bar -->
+    <header class="bg-polri-dark border-b border-slate-800 sticky top-0 z-40 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between py-3 md:h-20 gap-3 md:gap-0">
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3.5 w-full md:w-auto justify-between md:justify-start">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-amber-500/20 border border-amber-300 flex-shrink-0">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[9px] font-extrabold uppercase tracking-widest text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/30">RO SDM POLDA SULTRA</span>
+                                <span class="text-xs text-slate-400 hidden lg:inline">| PRESISI DIGITAL</span>
+                            </div>
+                            <h1 class="text-sm sm:text-base font-black tracking-tight text-white flex items-center gap-2">
+                                SIM-SITUM PERSONEL POLDA SULTRA
+                            </h1>
+                        </div>
+                    </div>
+                    <!-- Role Indicator Badge (Mobile) -->
+                    <span id="mobileRoleTag" class="md:hidden text-[10px] font-extrabold px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">SA</span>
+                </div>
+
+                <!-- Role Switcher & User Profile Context -->
+                <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
+                    <div class="flex items-center bg-slate-900 border border-amber-500/30 rounded-xl p-1.5 shadow-inner w-full md:w-auto">
+                        <div class="hidden lg:flex flex-col text-right px-2.5">
+                            <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Simulasi Role Active:</span>
+                            <span id="roleBadgeDisplay" class="text-xs font-black text-amber-400">Super Admin 1</span>
+                        </div>
+                        <select id="roleSelector" onchange="switchUserRole(this.value)" class="bg-slate-800 text-amber-400 text-xs font-bold rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 border border-slate-700 cursor-pointer w-full md:w-auto">
+                            <!-- JS Populated Role Options -->
+                        </select>
+                    </div>
+
+                    <!-- Current Operator Avatar Card -->
+                    <div class="hidden sm:flex items-center space-x-2.5 pl-3 border-l border-slate-800 flex-shrink-0">
+                        <div id="userAvatar" class="w-9 h-9 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shadow border-2 border-amber-300">
+                            SA
+                        </div>
+                        <div class="text-left">
+                            <div id="userNameDisplay" class="text-xs font-bold text-slate-200">SUPER ADMIN 1</div>
+                            <div id="userUnitDisplay" class="text-[10px] text-amber-400 font-semibold">RO SDM POLDA SULTRA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-20 z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-2 overflow-x-auto py-2.5 no-scrollbar">
+                <!-- Super Admin Only Tab -->
+                <button onclick="showTab('dashboard')" id="nav-dashboard" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 transition-all">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard Rekap Total
+                </button>
+                <!-- Operator & Admin Tab -->
+                <button onclick="showTab('input-data')" id="nav-input-data" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-pen-to-square"></i> Input / Edit Data Unit
+                </button>
+                <!-- Super Admin Only Tab -->
+                <button onclick="showTab('wa-export')" id="nav-wa-export" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> Kirim Rekap WA
+                    <span id="waBadgeTab" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] px-1.5 py-0.5 rounded-full font-extrabold">Auto WA</span>
+                </button>
+                <!-- Super Admin Only Tab -->
+                <button onclick="showTab('status-satker')" id="nav-status-satker" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-list-check"></i> Monitor Input (43 Unit)
+                </button>
+                <button onclick="showTab('management')" id="nav-management" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+                    <i class="fa-solid fa-users-gear"></i> Struktur Akses RBAC
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Role Context Notice Banner -->
+        <div id="roleContextBanner" class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-amber-950/40 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+            <div class="flex items-center space-x-3.5">
+                <div id="bannerIconContainer" class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20 flex-shrink-0">
+                    <i class="fa-solid fa-user-shield text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-extrabold text-white flex items-center gap-2 flex-wrap">
+                        <span id="bannerTitle">REKAPITULASI SITUASI UMUM PERSONEL</span>
+                        <span id="bannerUnitTag" class="text-xs font-extrabold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-md border border-amber-400/30">SUPER ADMIN 1 (AKSES SELURUH DATA)</span>
+                    </h2>
+                    <p id="bannerSubtext" class="text-xs text-slate-400 mt-0.5">Sistem Integrasi Rekap Laporan Otomatis 28 Satker Polda + 15 Satwil Polres/Ta dengan Ekspor Teks WA Pimpinan.</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 self-end md:self-auto flex-wrap gap-2">
+                <button id="btnQuickWa" onclick="triggerQuickWaShare()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition-all">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> Format WA
+                </button>
+                <button onclick="resetDataToDefault()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-rose-400 border border-slate-700 font-bold rounded-xl text-xs flex items-center gap-1.5 transition-all" title="Reset seluruh data ke baseline awal">
+                    <i class="fa-solid fa-rotate-left"></i> Reset Baseline
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= TAB 1: DASHBOARD REKAP (SUPER ADMIN ONLY) ================= -->
+        <div id="tab-content-dashboard" class="space-y-6">
+            
+            <!-- Summary Statistic Cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+                <!-- Card 1: Total Personel -->
+                <div class="col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-amber-500/40 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-amber-400 tracking-wider">1. Total Personel</span>
+                        <span class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg text-xs"><i class="fa-solid fa-users"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-white" id="cardTotalPersonel">0 <span class="text-xs font-semibold text-slate-400">Orang</span></div>
+                    <div class="mt-3 pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-1 text-[10px] text-slate-400">
+                        <div>POLKI: <b class="text-slate-200" id="cardPolki">0</b></div>
+                        <div>POLWAN: <b class="text-slate-200" id="cardPolwan">0</b></div>
+                        <div>PNS: <b class="text-slate-200" id="cardPns">0</b></div>
+                        <div>P3K: <b class="text-slate-200" id="cardP3k">0</b></div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Sakit Menahun -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-rose-500/40 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-rose-400">2. Sakit Menahun</span>
+                        <span class="p-1.5 bg-rose-500/10 text-rose-400 rounded-lg text-xs"><i class="fa-solid fa-bed-pulse"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-rose-400" id="cardSakitMenahun">0</div>
+                    <p class="text-[10px] text-slate-400 mt-2">Perawatan Khusus</p>
+                </div>
+
+                <!-- Card 3: Berobat Jalan -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-blue-500/40 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-blue-400">3. Berobat Jalan</span>
+                        <span class="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg text-xs"><i class="fa-solid fa-stethoscope"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-blue-400" id="cardBerobatJalan">0</div>
+                    <p class="text-[10px] text-slate-400 mt-2">Aktif & Rawat Jalan</p>
+                </div>
+
+                <!-- Card 4: Tugas Khusus -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-purple-500/40 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-purple-400">4. Tugas Khusus</span>
+                        <span class="p-1.5 bg-purple-500/10 text-purple-400 rounded-lg text-xs"><i class="fa-solid fa-user-shield"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-purple-400" id="cardTugasKhusus">0</div>
+                    <p class="text-[10px] text-slate-400 mt-2">Luar Struktur</p>
+                </div>
+
+                <!-- Card 5: BKO -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-emerald-500/40 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-emerald-400">5. Personel BKO</span>
+                        <span class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-xs"><i class="fa-solid fa-truck-fast"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-emerald-400" id="cardBkoTotal">0</div>
+                    <div class="mt-2 text-[9px] text-slate-400">
+                        Luar: <b class="text-slate-200" id="cardBkoLuar">0</b> | Internal: <b class="text-slate-200" id="cardBkoInternal">0</b>
+                    </div>
+                </div>
+
+                <!-- Card 6: DPO & Meninggal -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-amber-500/40 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-extrabold uppercase text-amber-400">6 & 7. DPO / MD</span>
+                        <span class="p-1.5 bg-amber-500/10 text-amber-400 rounded-lg text-xs"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[9px] text-slate-400 block">DPO</span>
+                            <span class="text-xl font-black text-amber-400" id="cardDpo">0</span>
+                        </div>
+                        <div class="border-l border-slate-800 pl-3">
+                            <span class="text-[9px] text-slate-400 block">MD</span>
+                            <span class="text-xl font-black text-slate-400" id="cardMeninggal">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Bar Chart -->
+                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar text-amber-400"></i>
+                            Grafik Distribusi Situasi Personel Polda Sultra
+                        </h3>
+                        <span class="text-[11px] bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg">Realtime Dynamic Data</span>
+                    </div>
+                    <div class="h-64 w-full">
+                        <canvas id="chartSituasiPersonel"></canvas>
+                    </div>
+                </div>
+
+                <!-- Doughnut Chart -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-amber-400"></i>
+                                Golongan Personel
+                            </h3>
+                            <span class="text-[10px] text-amber-400 font-extrabold" id="doughnutTotalTag">8.884 Total</span>
+                        </div>
+                        <div class="h-48 w-full flex items-center justify-center">
+                            <canvas id="chartGolongan"></canvas>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-[10px] pt-3 border-t border-slate-800">
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">POLKI</span>
+                            <span class="font-bold text-amber-400" id="chartLabelPolki">0 Orang</span>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">POLWAN</span>
+                            <span class="font-bold text-rose-400" id="chartLabelPolwan">0 Orang</span>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">PNS</span>
+                            <span class="font-bold text-blue-400" id="chartLabelPns">0 Orang</span>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800">
+                            <span class="text-slate-400 block">P3K</span>
+                            <span class="font-bold text-emerald-400" id="chartLabelP3k">0 Orang</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Breakdown Table (Super Admin View) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="p-4 bg-slate-950/80 border-b border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-table-list text-amber-400"></i>
+                            Rincian Situasi Personel Seluruh Satker & Satwil (43 Unit)
+                        </h3>
+                        <p class="text-xs text-slate-400">Pengawasan Terpusat Super Admin Laporan Harian Polda Sultra</p>
+                    </div>
+                    <div class="flex items-center space-x-2 w-full md:w-auto">
+                        <select id="filterTypeSelect" onchange="renderMainRekapTable()" class="bg-slate-900 border border-slate-800 text-xs rounded-xl px-2.5 py-1.5 text-slate-300 focus:outline-none focus:border-amber-500">
+                            <option value="ALL">Semua Unit (43)</option>
+                            <option value="POLDA">Satker Polda (28)</option>
+                            <option value="POLRES">Satwil Polres (15)</option>
+                        </select>
+                        <input type="text" id="searchTableInput" onkeyup="renderMainRekapTable()" placeholder="Cari Satker / Polres..." class="bg-slate-900 border border-slate-800 text-xs rounded-xl px-3 py-1.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 w-full sm:w-48">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-950 text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">No</th>
+                                <th class="p-3">Satker / Satwil</th>
+                                <th class="p-3 text-center">Polki</th>
+                                <th class="p-3 text-center">Polwan</th>
+                                <th class="p-3 text-center">PNS</th>
+                                <th class="p-3 text-center">P3K</th>
+                                <th class="p-3 text-center bg-slate-900/60 font-black text-amber-400">Total</th>
+                                <th class="p-3 text-center">Sakit Mnhn</th>
+                                <th class="p-3 text-center">Rwt Jalan</th>
+                                <th class="p-3 text-center">Tgs Khusus</th>
+                                <th class="p-3 text-center">BKO Luar</th>
+                                <th class="p-3 text-center">BKO Lkgp</th>
+                                <th class="p-3 text-center">DPO</th>
+                                <th class="p-3 text-center">MD</th>
+                                <th class="p-3 text-center">Aksi Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rekapTableBody" class="divide-y divide-slate-800 text-slate-300 font-medium">
+                            <!-- JS Populated -->
+                        </tbody>
+                        <tfoot id="rekapTableFoot" class="bg-slate-950/90 font-black text-amber-400 border-t-2 border-slate-700">
+                            <!-- JS Populated Totals -->
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: INPUT / EDIT DATA (OPERATOR & ADMIN) ================= -->
+        <div id="tab-content-input-data" class="hidden space-y-6">
+            
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-amber-400"></i>
+                        Form Entry Data Situasi Personel Unit Kerja
+                    </h2>
+                    <p class="text-xs text-slate-400" id="formDescText">Isi angka data personel harian riil sesuai kondisi terkini unit Anda.</p>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 px-3.5 py-2 rounded-xl text-xs flex items-center space-x-2.5">
+                    <span class="text-slate-400">Hak Akses Unit:</span>
+                    <span id="activeUnitFormTag" class="text-amber-400 font-extrabold">SUPER ADMIN (AKSES SELURUH UNIT)</span>
+                </div>
+            </div>
+
+            <!-- Restricted Single Unit Preview Box for Operators -->
+            <div id="operatorIsolationInfoCard" class="hidden bg-slate-900 border border-amber-500/30 p-4 rounded-2xl shadow-lg">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                    <span class="text-xs font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-sm"></i>
+                        Mode Isolasi Data Operator Aktif
+                    </span>
+                    <span class="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30 font-semibold" id="isolationUnitBadge">DITRESKRIMUM</span>
+                </div>
+                <p class="text-xs text-slate-300">
+                    Anda sedang login sebagai operator resmi unit ini. Anda **hanya dapat melihat & memperbarui data milik unit Anda**. Data gabungan Polda Sultra hanya dapat diakses oleh Super Admin.
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <form id="situasiForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    
+                    <!-- Target Selection (Only Editable by Super Admin) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4 border-b border-slate-800">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Target Satker / Satwil</label>
+                            <select id="formSatkerSelect" onchange="loadSatkerDataToForm(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-500">
+                                <!-- Dynamically Rendered -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Tanggal Update Laporan</label>
+                            <input type="date" id="formDateInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Operator Penginput</label>
+                            <input type="text" id="formOperatorInput" readonly class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-400 cursor-not-allowed font-medium">
+                        </div>
+                    </div>
+
+                    <!-- Input Section 1: Rincian Jumlah Personel -->
+                    <div>
+                        <h4 class="text-xs font-extrabold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-users text-sm"></i> 1. Rincian Jumlah Personel (Riil)
+                        </h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-400 mb-1">POLKI</label>
+                                <input type="number" min="0" id="inPolki" oninput="calculateFormTotal()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs font-bold text-white focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-400 mb-1">POLWAN</label>
+                                <input type="number" min="0" id="inPolwan" oninput="calculateFormTotal()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs font-bold text-white focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-400 mb-1">PNS</label>
+                                <input type="number" min="0" id="inPns" oninput="calculateFormTotal()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs font-bold text-white focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-400 mb-1">P3K</label>
+                                <input type="number" min="0" id="inP3k" oninput="calculateFormTotal()" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs font-bold text-white focus:border-amber-500">
+                            </div>
+                            <div class="col-span-2 sm:col-span-4 bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-300">Total Personel Riil Unit Ini:</span>
+                                <span id="formTotalCalculated" class="text-base font-black text-amber-400">0 Orang</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Section 2: Situasi Khusus Personel -->
+                    <div>
+                        <h4 class="text-xs font-extrabold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-list text-sm"></i> 2 - 7. Kategori Situasi Khusus Personel
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">2. Sakit Menahun (Orang)</label>
+                                <input type="number" min="0" id="inSakitMenahun" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-rose-400 font-bold focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">3. Aktif Dinas & Berobat Jalan (Orang)</label>
+                                <input type="number" min="0" id="inBerobatJalan" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-blue-400 font-bold focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">4. Personel Tugas Khusus (Orang)</label>
+                                <input type="number" min="0" id="inTugasKhusus" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-purple-400 font-bold focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">5a. BKO Luar Polda (e.g. NTT/Mabes)</label>
+                                <input type="number" min="0" id="inBkoLuar" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-emerald-400 font-bold focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">5b. BKO Lingkup Internal Polda</label>
+                                <input type="number" min="0" id="inBkoInternal" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-emerald-400 font-bold focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">6. Personel DPO (Orang)</label>
+                                <input type="number" min="0" id="inDpo" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-amber-400 font-bold focus:border-amber-500">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">7. Meninggal Dunia (Orang)</label>
+                                <input type="number" min="0" id="inMeninggal" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-300 font-bold focus:border-amber-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Section 3: Catatan Tambahan -->
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Keterangan / Catatan Tambahan Unit</label>
+                        <textarea id="inNotes" rows="2" placeholder="Tuliskan rincian nama personel sakit menahun, lokasi BKO, atau informasi penting lainnya..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500"></textarea>
+                    </div>
+
+                    <!-- Submit Actions -->
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-500" id="lastUpdatedNote">Terakhir Diperbarui: -</span>
+                        <div class="flex space-x-3">
+                            <button type="button" onclick="resetFormFields()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition">
+                                Reset Form
+                            </button>
+                            <button type="submit" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-xs shadow-lg shadow-amber-500/20 transition flex items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i> Simpan Data Laporan
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Single Unit History / Details Box for Isolated Operator -->
+            <div id="operatorUnitHistoryCard" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h3 class="text-xs font-extrabold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
+                    Ringkasan Data Ter-input Unit Anda Saat Ini
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs" id="operatorSummaryBoxes">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: KIRIM REKAP WHATSAPP (SUPER ADMIN ONLY) ================= -->
+        <div id="tab-content-wa-export" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Preview Text WA -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
+                                Format Standar WhatsApp Laporan Pimpinan
+                            </h3>
+                            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-extrabold">Auto Generated</span>
+                        </div>
+
+                        <!-- WA Text Box Container -->
+                        <div class="wa-bg p-4 rounded-xl border border-slate-800 font-mono text-xs text-slate-200 leading-relaxed max-h-[520px] overflow-y-auto whitespace-pre-wrap select-all shadow-inner" id="waPreviewBox">
+                            <!-- Dynamic WA Text -->
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                        <button onclick="copyWaText()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs flex items-center gap-2 border border-slate-700 transition">
+                            <i class="fa-solid fa-copy text-amber-400"></i> Salin Format WA
+                        </button>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="sendToWhatsAppWeb()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Kirim Langsung ke WA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WA Configuration Panel -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-amber-400"></i>
+                            Opsi & Tujuan Pengiriman WA
+                        </h3>
+                        
+                        <div class="space-y-3.5 text-xs">
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-semibold">Nomor WA Target (Opsional)</label>
+                                <input type="text" id="targetWaNumber" placeholder="Contoh: 628123456789 (Kosongkan jika mau pilih chat di WA)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-amber-500">
+                                <p class="text-[10px] text-slate-500 mt-1">Jika kosong, sistem membuka aplikasi WhatsApp dan meminta Anda memilih kontak/grup target.</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-semibold">Gaya Header Laporan</label>
+                                <select id="waHeaderStyle" onchange="generateWaText()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white focus:outline-none focus:border-amber-500">
+                                    <option value="pimpinan">Resmi Pimpinan (Kapolda / Wakapolda / Karo SDM)</option>
+                                    <option value="grup">Format Ringkas Grup WhatsApp</option>
+                                    <option value="sdm">Format Khusus Biro SDM Polda Sultra</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                                <div class="text-[11px] font-bold text-amber-400">Petunjuk Pengiriman WA:</div>
+                                <ul class="text-[10px] text-slate-400 list-disc list-inside space-y-1">
+                                    <li>Klik <b>"Kirim Langsung ke WA"</b> untuk meluncur ke WhatsApp Web / HP.</li>
+                                    <li>Klik <b>"Salin Format WA"</b> jika ingin menempelkan (paste) teks secara manual.</li>
+                                    <li>Format menggunakan markdown bold (`*teks*`) yang didukung penuh oleh WhatsApp.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Data Verification Box -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                        <h4 class="text-xs font-bold text-white mb-2 flex items-center justify-between">
+                            <span>Status Rekapitulasi Terkini:</span>
+                            <span class="text-emerald-400 text-[10px]"><i class="fa-solid fa-circle-check"></i> Integrated</span>
+                        </h4>
+                        <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-300">
+                            <div class="bg-slate-950 p-2 rounded-lg">Total Personel: <b class="text-amber-400" id="waTotalPersonelTag">0</b></div>
+                            <div class="bg-slate-950 p-2 rounded-lg">Sakit Menahun: <b class="text-rose-400" id="waSakitTag">0</b></div>
+                            <div class="bg-slate-950 p-2 rounded-lg">Berobat Jalan: <b class="text-blue-400" id="waBerobatTag">0</b></div>
+                            <div class="bg-slate-950 p-2 rounded-lg">Tugas Khusus: <b class="text-purple-400" id="waTugasTag">0</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: STATUS INPUT SATKER (SUPER ADMIN ONLY) ================= -->
+        <div id="tab-content-status-satker" class="hidden space-y-6">
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-amber-400"></i>
+                        Monitor Kepatuhan Input Laporan Harian (43 Unit)
+                    </h2>
+                    <p class="text-xs text-slate-400">Pemantauan real-time unit yang sudah atau belum memperbarui laporan harian</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="overallComplianceBadge" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-xl font-bold flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        43 / 43 Terinput (100%)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Status List Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 28 Satker Polda -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                        <h3 class="text-xs font-extrabold uppercase text-amber-400 tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-building text-blue-400"></i> 28 Satker Tingkat Polda
+                        </h3>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold">28 Unit</span>
+                    </div>
+                    <div class="space-y-2 max-h-96 overflow-y-auto pr-1" id="satkerStatusList">
+                        <!-- JS Render -->
+                    </div>
+                </div>
+
+                <!-- 15 Satwil Polres -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                        <h3 class="text-xs font-extrabold uppercase text-amber-400 tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-shield text-cyan-400"></i> 15 Satwil Tingkat Polres/Ta
+                        </h3>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold">15 Unit</span>
+                    </div>
+                    <div class="space-y-2 max-h-96 overflow-y-auto pr-1" id="polresStatusList">
+                        <!-- JS Render -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 5: ROLE MANAGEMENT & RBAC STRUCT ================= -->
+        <div id="tab-content-management" class="hidden space-y-6">
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl">
+                <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-amber-400"></i>
+                    Struktur Multi-Level Role & Hak Akses Pengguna (RBAC)
+                </h2>
+                <p class="text-xs text-slate-400">Pembagian matriks hak akses data antara Super Admin, Satker Polda, dan Satwil Polres/Ta</p>
+            </div>
+
+            <!-- Role Cards Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Super Admin Card -->
+                <div class="bg-slate-900 border border-amber-500/40 rounded-2xl p-5 shadow-xl">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-black uppercase tracking-wider text-amber-400">Super Admin (2 User)</span>
+                        <span class="p-2 bg-amber-500/10 text-amber-400 rounded-xl text-xs"><i class="fa-solid fa-crown"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-white mb-1">Super Admin 1 & 2</div>
+                    <p class="text-xs text-slate-400 mb-4">Akses Penuh Validasi Akhir, Pengaturan WhatsApp, & Export Rekap Polda.</p>
+                    <ul class="text-[11px] text-slate-300 space-y-2 pt-3 border-t border-slate-800">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Melihat Rekap Gabungan 43 Unit</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Mengedit/Update Seluruh Unit</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Fitur Ekspor Format WA Pimpinan</li>
+                    </ul>
+                </div>
+
+                <!-- Operator Satker Card -->
+                <div class="bg-slate-900 border border-blue-500/30 rounded-2xl p-5 shadow-xl">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-black uppercase tracking-wider text-blue-400">Operator Satker (28 Unit)</span>
+                        <span class="p-2 bg-blue-500/10 text-blue-400 rounded-xl text-xs"><i class="fa-solid fa-building"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-white mb-1">28 Satker Polda</div>
+                    <p class="text-xs text-slate-400 mb-4">Input data khusus tingkat Satker Polda (Ditreskrimum, Ditlantas, Satbrimob, dll).</p>
+                    <ul class="text-[11px] text-slate-300 space-y-2 pt-3 border-t border-slate-800">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-lock text-amber-400"></i> Ter-isolasi Hanya Data Satker Sendiri</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-xmark text-rose-400"></i> Tidak Dapat Melihat Total Polda</li>
+                    </ul>
+                </div>
+
+                <!-- Operator Satwil Card -->
+                <div class="bg-slate-900 border border-cyan-500/30 rounded-2xl p-5 shadow-xl">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-black uppercase tracking-wider text-cyan-400">Operator Satwil (15 Unit)</span>
+                        <span class="p-2 bg-cyan-500/10 text-cyan-400 rounded-xl text-xs"><i class="fa-solid fa-shield"></i></span>
+                    </div>
+                    <div class="text-2xl font-black text-white mb-1">15 Polres/Ta</div>
+                    <p class="text-xs text-slate-400 mb-4">Input data khusus tingkat Satwil Polres/Polresta Jajaran Sultra.</p>
+                    <ul class="text-[11px] text-slate-300 space-y-2 pt-3 border-t border-slate-800">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-lock text-amber-400"></i> Ter-isolasi Hanya Data Polres Sendiri</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-xmark text-rose-400"></i> Tidak Dapat Melihat Polres Lain</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 border border-amber-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div id="toastIcon" class="text-amber-400 text-lg"><i class="fa-solid fa-circle-check"></i></div>
+        <div id="toastMessage" class="text-xs font-semibold">Notifikasi Sistem</div>
+    </div>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+
+        // LIST OF 28 SATKER POLDA SULTRA
+        const SATKER_POLDA = [
+            "RO OPS", "RO RENA", "RO SDM", "RO LOG", 
+            "DITRESKRIMUM", "DITRESKRIMSUS", "DITRESNARKOBA", "DITINTELKAM", 
+            "DITLANTAS", "DITBINMAS", "DITSAMAPTA", "DITPOLAIRUD", 
+            "DITPAMOBVIT", "DITTAHTI", "SATBRIMOB", "BIDDOKKES", 
+            "BIDHUMAS", "BIDPROPAM", "BIDTIK", "BIDKEU", 
+            "BIDKUM", "BIDHRD", "ITWASDA", "SPRIPIM", 
+            "SETUM", "YANMA", "SPN", "RUMKIT BHAYANGKARA"
+        ];
+
+        // LIST OF 15 SATWIL POLRES JAJARAN POLDA SULTRA
+        const SATWIL_POLRES = [
+            "POLRESTA KENDARI", "POLRES KONAWE", "POLRES KONAWE SELATAN", 
+            "POLRES KONAWE UTARA", "POLRES KOLAKA", "POLRES KOLAKA UTARA", 
+            "POLRES KOLAKA TIMUR", "POLRES BOMBANA", "POLRES MUNA", 
+            "POLRES BUTON", "POLRES BUTON UTARA", "POLRES BUTON TENGAH", 
+            "POLRES BUTON SELATAN", "POLRES WAKATOBI", "POLRES BAUBAU"
+        ];
+
+        // Local Storage Key
+        const STORAGE_KEY = 'SITUM_POLDA_SULTRA_DATA_V2';
+
+        // State Variables
+        let currentRoleType = 'super_admin'; // 'super_admin', 'polda', 'polres'
+        let currentUnitKey = 'SUPER ADMIN 1'; // Unique key identifier
+        let unitDataStore = {};
+
+        // Charts
+        let chartSituasi = null;
+        let chartGolongan = null;
+
+        // Initialize Baseline Data Matching Prompt Specs Exactly
+        function getDefaultBaselineData() {
+            let data = {};
+
+            // Target Baseline Polda Sultra Total:
+            // Polki: 7806, Polwan: 842, PNS: 231, P3K: 5 -> Total 8884
+            // Sakit Menahun: 21, Berobat Jalan: 82, Tugas Khusus: 109, BKO Luar: 18, BKO Internal: 89, DPO: 1, Meninggal: 0
+
+            // Seed 28 Satker Polda
+            SATKER_POLDA.forEach((name, idx) => {
+                let isBig = ["SATBRIMOB", "DITSAMAPTA", "DITLANTAS", "DITRESKRIMUM", "RO SDM"].includes(name);
+                let polki = isBig ? 280 : 120;
+                let polwan = isBig ? 30 : 12;
+                let pns = isBig ? 8 : 4;
+                let p3k = (idx === 0 || idx === 1) ? 1 : 0;
+
+                data[name] = {
+                    name: name,
+                    type: 'POLDA',
+                    polki: polki,
+                    polwan: polwan,
+                    pns: pns,
+                    p3k: p3k,
+                    sakitMenahun: (idx % 3 === 0) ? 1 : 0,
+                    berobatJalan: (idx % 2 === 0) ? 2 : 1,
+                    tugasKhusus: (idx % 2 === 0) ? 3 : 1,
+                    bkoLuar: (idx === 0) ? 5 : ((idx === 14) ? 3 : 0),
+                    bkoInternal: (idx % 3 === 0) ? 3 : 1,
+                    dpo: (idx === 0) ? 1 : 0,
+                    meninggal: 0,
+                    notes: '',
+                    lastUpdate: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                };
+            });
+
+            // Seed 15 Satwil Polres
+            SATWIL_POLRES.forEach((name, idx) => {
+                let isLargePolres = ["POLRESTA KENDARI", "POLRES KONAWE", "POLRES KOLAKA", "POLRES BAUBAU"].includes(name);
+                let polki = isLargePolres ? 350 : 210;
+                let polwan = isLargePolres ? 40 : 20;
+                let pns = isLargePolres ? 8 : 4;
+                let p3k = (idx === 2 || idx === 4 || idx === 8) ? 1 : 0;
+
+                data[name] = {
+                    name: name,
+                    type: 'POLRES',
+                    polki: polki,
+                    polwan: polwan,
+                    pns: pns,
+                    p3k: p3k,
+                    sakitMenahun: (idx % 2 === 0) ? 1 : 0,
+                    berobatJalan: 3,
+                    tugasKhusus: 2,
+                    bkoLuar: (idx === 0) ? 10 : 0,
+                    bkoInternal: 2,
+                    dpo: 0,
+                    meninggal: 0,
+                    notes: '',
+                    lastUpdate: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                };
+            });
+
+            // Adjust differences exactly to 8.884 Baseline
+            let keys = Object.keys(data);
+            let curPolki = 0, curPolwan = 0, curPns = 0, curP3k = 0;
+            let curSakit = 0, curBerobat = 0, curTgs = 0, curBkoLuar = 0, curBkoInt = 0, curDpo = 0;
+
+            keys.forEach(k => {
+                curPolki += data[k].polki;
+                curPolwan += data[k].polwan;
+                curPns += data[k].pns;
+                curP3k += data[k].p3k;
+                curSakit += data[k].sakitMenahun;
+                curBerobat += data[k].berobatJalan;
+                curTgs += data[k].tugasKhusus;
+                curBkoLuar += data[k].bkoLuar;
+                curBkoInt += data[k].bkoInternal;
+                curDpo += data[k].dpo;
+            });
+
+            data["RO SDM"].polki += (7806 - curPolki);
+            data["RO SDM"].polwan += (842 - curPolwan);
+            data["RO SDM"].pns += (231 - curPns);
+            data["RO SDM"].p3k += (5 - curP3k);
+            data["RO SDM"].sakitMenahun += (21 - curSakit);
+            data["RO SDM"].berobatJalan += (82 - curBerobat);
+            data["RO SDM"].tugasKhusus += (109 - curTgs);
+            data["RO SDM"].bkoLuar += (18 - curBkoLuar);
+            data["RO SDM"].bkoInternal += (89 - curBkoInt);
+            data["RO SDM"].dpo += (1 - curDpo);
+
+            return data;
+        }
+
+        // Load & Save to LocalStorage
+        function initDataStore() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if(saved) {
+                try {
+                    unitDataStore = JSON.parse(saved);
+                } catch(e) {
+                    unitDataStore = getDefaultBaselineData();
+                }
+            } else {
+                unitDataStore = getDefaultBaselineData();
+                saveDataStore();
+            }
+        }
+
+        function saveDataStore() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(unitDataStore));
+        }
+
+        function resetDataToDefault() {
+            if(confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke baseline statistik awal?")) {
+                unitDataStore = getDefaultBaselineData();
+                saveDataStore();
+                updateDashboardCards();
+                renderMainRekapTable();
+                renderStatusLists();
+                generateWaText();
+                showToast("Seluruh data berhasil di-reset ke baseline awal!");
+            }
+        }
+
+
+        // Compute Grand Totals across 43 Units
+        function calculateGrandTotals() {
+            let totals = {
+                polki: 0, polwan: 0, pns: 0, p3k: 0, totalPersonel: 0,
+                sakitMenahun: 0, berobatJalan: 0, tugasKhusus: 0,
+                bkoLuar: 0, bkoInternal: 0, dpo: 0, meninggal: 0
+            };
+
+            Object.values(unitDataStore).forEach(u => {
+                totals.polki += u.polki;
+                totals.polwan += u.polwan;
+                totals.pns += u.pns;
+                totals.p3k += u.p3k;
+                totals.sakitMenahun += u.sakitMenahun;
+                totals.berobatJalan += u.berobatJalan;
+                totals.tugasKhusus += u.tugasKhusus;
+                totals.bkoLuar += u.bkoLuar;
+                totals.bkoInternal += u.bkoInternal;
+                totals.dpo += u.dpo;
+                totals.meninggal += u.meninggal;
+            });
+
+            totals.totalPersonel = totals.polki + totals.polwan + totals.pns + totals.p3k;
+            return totals;
+        }
+
+        // Populate Role Dropdown Selector
+        function buildRoleSelectorOptions() {
+            const select = document.getElementById('roleSelector');
+            select.innerHTML = '';
+
+            // Group 1: Super Admin
+            let g1 = document.createElement('optgroup');
+            g1.label = "👑 SUPER ADMIN (2 USER)";
+            let o1 = document.createElement('option');
+            o1.value = "SA_1";
+            o1.innerText = "👑 Super Admin 1 (Karo SDM)";
+            let o2 = document.createElement('option');
+            o2.value = "SA_2";
+            o2.innerText = "👑 Super Admin 2 (Bag Dalpers)";
+            g1.appendChild(o1);
+            g1.appendChild(o2);
+            select.appendChild(g1);
+
+            // Group 2: Satker Polda (28)
+            let g2 = document.createElement('optgroup');
+            g2.label = "🏛️ OPERATOR SATKER POLDA (28 UNIT)";
+            SATKER_POLDA.forEach(s => {
+                let opt = document.createElement('option');
+                opt.value = `POLDA_${s}`;
+                opt.innerText = `Satker Polda: ${s}`;
+                g2.appendChild(opt);
+            });
+            select.appendChild(g2);
+
+            // Group 3: Satwil Polres (15)
+            let g3 = document.createElement('optgroup');
+            g3.label = "🚔 OPERATOR SATWIL POLRES (15 UNIT)";
+            SATWIL_POLRES.forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = `POLRES_${p}`;
+                opt.innerText = `Satwil Polres: ${p}`;
+                g3.appendChild(opt);
+            });
+            select.appendChild(g3);
+        }
+
+        // Switch Role Logic & Data Isolation Handling
+        function switchUserRole(roleCode) {
+            if(roleCode.startsWith("SA_")) {
+                currentRoleType = 'super_admin';
+                currentUnitKey = roleCode === "SA_1" ? "Super Admin 1" : "Super Admin 2";
+
+                document.getElementById('roleBadgeDisplay').innerText = currentUnitKey;
+                document.getElementById('userNameDisplay').innerText = roleCode === "SA_1" ? "KARO SDM POLDA SULTRA" : "KABAG DALPERS POLDA SULTRA";
+                document.getElementById('userUnitDisplay').innerText = "RO SDM POLDA SULTRA";
+                document.getElementById('userAvatar').innerText = "SA";
+                document.getElementById('mobileRoleTag').innerText = "SA";
+
+                // Banner
+                document.getElementById('bannerTitle').innerText = "REKAPITULASI SITUASI UMUM PERSONEL POLDA SULTRA";
+                document.getElementById('bannerUnitTag').innerText = `${currentUnitKey.toUpperCase()} (AKSES SELURUH DATA 43 UNIT)`;
+                document.getElementById('bannerSubtext').innerText = "Sistem Integrasi Rekap Laporan Otomatis 28 Satker Polda + 15 Satwil Polres/Ta dengan Ekspor Teks WA Pimpinan.";
+                document.getElementById('bannerIconContainer').innerHTML = '<i class="fa-solid fa-user-shield text-2xl"></i>';
+
+                // Tabs Visibility
+                document.getElementById('nav-dashboard').classList.remove('hidden');
+                document.getElementById('nav-wa-export').classList.remove('hidden');
+                document.getElementById('nav-status-satker').classList.remove('hidden');
+                document.getElementById('btnQuickWa').classList.remove('hidden');
+                document.getElementById('operatorIsolationInfoCard').classList.add('hidden');
+
+                document.getElementById('activeUnitFormTag').innerText = "SUPER ADMIN (AKSES SELURUH UNIT)";
+                
+            } else if(roleCode.startsWith("POLDA_")) {
+                let satkerName = roleCode.replace("POLDA_", "");
+                currentRoleType = 'polda';
+                currentUnitKey = satkerName;
+
+                document.getElementById('roleBadgeDisplay').innerText = `Satker ${satkerName}`;
+                document.getElementById('userNameDisplay').innerText = `OPERATOR ${satkerName}`;
+                document.getElementById('userUnitDisplay').innerText = `SATKER POLDA SULTRA`;
+                document.getElementById('userAvatar').innerText = "OP";
+                document.getElementById('mobileRoleTag').innerText = "OP";
+
+                // Banner
+                document.getElementById('bannerTitle').innerText = `SITUASI PERSONEL ${satkerName}`;
+                document.getElementById('bannerUnitTag').innerText = `OPERATOR SATKER: ${satkerName}`;
+                document.getElementById('bannerSubtext').innerText = "Anda sedang berada di tampilan khusus Operator Satker. Hanya data milik unit Anda yang dapat dikelola.";
+                document.getElementById('bannerIconContainer').innerHTML = '<i class="fa-solid fa-building text-2xl"></i>';
+
+                // Tabs Visibility Isolation
+                document.getElementById('nav-dashboard').classList.add('hidden');
+                document.getElementById('nav-wa-export').classList.add('hidden');
+                document.getElementById('nav-status-satker').classList.add('hidden');
+                document.getElementById('btnQuickWa').classList.add('hidden');
+                document.getElementById('operatorIsolationInfoCard').classList.remove('hidden');
+                document.getElementById('isolationUnitBadge').innerText = satkerName;
+
+                document.getElementById('activeUnitFormTag').innerText = `SATKER: ${satkerName}`;
+
+                // Force to Input Tab
+                showTab('input-data');
+
+            } else if(roleCode.startsWith("POLRES_")) {
+                let polresName = roleCode.replace("POLRES_", "");
+                currentRoleType = 'polres';
+                currentUnitKey = polresName;
+
+                document.getElementById('roleBadgeDisplay').innerText = polresName;
+                document.getElementById('userNameDisplay').innerText = `OPERATOR ${polresName}`;
+                document.getElementById('userUnitDisplay').innerText = `SATWIL POLRES JAJARAN`;
+                document.getElementById('userAvatar').innerText = "PR";
+                document.getElementById('mobileRoleTag').innerText = "PR";
+
+                // Banner
+                document.getElementById('bannerTitle').innerText = `SITUASI PERSONEL ${polresName}`;
+                document.getElementById('bannerUnitTag').innerText = `OPERATOR SATWIL: ${polresName}`;
+                document.getElementById('bannerSubtext').innerText = "Anda sedang berada di tampilan khusus Operator Satwil. Hanya data milik Polres Anda yang dapat dikelola.";
+                document.getElementById('bannerIconContainer').innerHTML = '<i class="fa-solid fa-shield text-2xl"></i>';
+
+                // Tabs Visibility Isolation
+                document.getElementById('nav-dashboard').classList.add('hidden');
+                document.getElementById('nav-wa-export').classList.add('hidden');
+                document.getElementById('nav-status-satker').classList.add('hidden');
+                document.getElementById('btnQuickWa').classList.add('hidden');
+                document.getElementById('operatorIsolationInfoCard').classList.remove('hidden');
+                document.getElementById('isolationUnitBadge').innerText = polresName;
+
+                document.getElementById('activeUnitFormTag').innerText = `SATWIL: ${polresName}`;
+
+                // Force to Input Tab
+                showTab('input-data');
+            }
+
+            document.getElementById('formOperatorInput').value = `${document.getElementById('userNameDisplay').innerText} (${currentUnitKey})`;
+            populateFormSatkerOptions();
+            renderOperatorSummaryBox();
+            
+            if(currentRoleType === 'super_admin') {
+                updateDashboardCards();
+                renderMainRekapTable();
+                renderStatusLists();
+                generateWaText();
+            }
+
+            showToast(`Role berubah ke: ${currentUnitKey}`);
+        }
+
+        // Render Dashboard Cards & Charts
+        function updateDashboardCards() {
+            if(currentRoleType !== 'super_admin') return;
+
+            const t = calculateGrandTotals();
+
+            document.getElementById('cardTotalPersonel').innerHTML = `${t.totalPersonel.toLocaleString('id-ID')} <span class="text-xs font-semibold text-slate-400">Orang</span>`;
+            document.getElementById('cardPolki').innerText = t.polki.toLocaleString('id-ID');
+            document.getElementById('cardPolwan').innerText = t.polwan.toLocaleString('id-ID');
+            document.getElementById('cardPns').innerText = t.pns.toLocaleString('id-ID');
+            document.getElementById('cardP3k').innerText = t.p3k.toLocaleString('id-ID');
+
+            document.getElementById('cardSakitMenahun').innerText = t.sakitMenahun;
+            document.getElementById('cardBerobatJalan').innerText = t.berobatJalan;
+            document.getElementById('cardTugasKhusus').innerText = t.tugasKhusus;
+            document.getElementById('cardBkoTotal').innerText = t.bkoLuar + t.bkoInternal;
+            document.getElementById('cardBkoLuar').innerText = t.bkoLuar;
+            document.getElementById('cardBkoInternal').innerText = t.bkoInternal;
+            document.getElementById('cardDpo').innerText = t.dpo;
+            document.getElementById('cardMeninggal').innerText = t.meninggal;
+
+            document.getElementById('doughnutTotalTag').innerText = `${t.totalPersonel.toLocaleString('id-ID')} Total`;
+            document.getElementById('chartLabelPolki').innerText = `${t.polki.toLocaleString('id-ID')} Orang`;
+            document.getElementById('chartLabelPolwan').innerText = `${t.polwan.toLocaleString('id-ID')} Orang`;
+            document.getElementById('chartLabelPns').innerText = `${t.pns.toLocaleString('id-ID')} Orang`;
+            document.getElementById('chartLabelP3k').innerText = `${t.p3k.toLocaleString('id-ID')} Orang`;
+
+            // Update WA tags
+            document.getElementById('waTotalPersonelTag').innerText = t.totalPersonel.toLocaleString('id-ID');
+            document.getElementById('waSakitTag').innerText = t.sakitMenahun;
+            document.getElementById('waBerobatTag').innerText = t.berobatJalan;
+            document.getElementById('waTugasTag').innerText = t.tugasKhusus;
+
+            renderCharts(t);
+        }
+
+        // Render Main Data Table (For Super Admin)
+        function renderMainRekapTable() {
+            if(currentRoleType !== 'super_admin') return;
+
+            const tbody = document.getElementById('rekapTableBody');
+            const tfoot = document.getElementById('rekapTableFoot');
+            const query = document.getElementById('searchTableInput').value.toLowerCase();
+            const filterType = document.getElementById('filterTypeSelect').value;
+
+            let html = '';
+            let no = 1;
+            let grand = calculateGrandTotals();
+
+            Object.values(unitDataStore).forEach(u => {
+                if(filterType !== 'ALL' && u.type !== filterType) return;
+                if(query && !u.name.toLowerCase().includes(query)) return;
+
+                let rowTotal = u.polki + u.polwan + u.pns + u.p3k;
+                let isPolres = u.type === 'POLRES';
+
+                html += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-3 text-slate-500 font-mono text-[11px]">${no++}</td>
+                        <td class="p-3 font-bold ${isPolres ? 'text-cyan-400' : 'text-slate-200'} flex items-center gap-2">
+                            <i class="fa-solid ${isPolres ? 'fa-shield text-cyan-400' : 'fa-building text-blue-400'} text-[10px]"></i>
+                            ${u.name}
+                        </td>
+                        <td class="p-3 text-center">${u.polki}</td>
+                        <td class="p-3 text-center">${u.polwan}</td>
+                        <td class="p-3 text-center">${u.pns}</td>
+                        <td class="p-3 text-center">${u.p3k}</td>
+                        <td class="p-3 text-center font-black text-amber-400 bg-slate-950/40">${rowTotal}</td>
+                        <td class="p-3 text-center ${u.sakitMenahun > 0 ? 'text-rose-400 font-bold' : 'text-slate-500'}">${u.sakitMenahun}</td>
+                        <td class="p-3 text-center ${u.berobatJalan > 0 ? 'text-blue-400 font-bold' : 'text-slate-500'}">${u.berobatJalan}</td>
+                        <td class="p-3 text-center ${u.tugasKhusus > 0 ? 'text-purple-400 font-bold' : 'text-slate-500'}">${u.tugasKhusus}</td>
+                        <td class="p-3 text-center">${u.bkoLuar}</td>
+                        <td class="p-3 text-center">${u.bkoInternal}</td>
+                        <td class="p-3 text-center ${u.dpo > 0 ? 'text-amber-400 font-bold' : 'text-slate-500'}">${u.dpo}</td>
+                        <td class="p-3 text-center text-slate-500">${u.meninggal}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="editUnitFromTable('${u.name}')" class="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-lg text-[10px] font-bold border border-amber-500/30 transition">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+
+            tfoot.innerHTML = `
+                <tr>
+                    <td colspan="2" class="p-3 uppercase">TOTAL REKAPITULASI POLDA SULTRA</td>
+                    <td class="p-3 text-center">${grand.polki.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-center">${grand.polwan.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-center">${grand.pns.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-center">${grand.p3k.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-center text-amber-400 text-sm font-black bg-slate-900">${grand.totalPersonel.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-center text-rose-400">${grand.sakitMenahun}</td>
+                    <td class="p-3 text-center text-blue-400">${grand.berobatJalan}</td>
+                    <td class="p-3 text-center text-purple-400">${grand.tugasKhusus}</td>
+                    <td class="p-3 text-center text-emerald-400">${grand.bkoLuar}</td>
+                    <td class="p-3 text-center text-emerald-400">${grand.bkoInternal}</td>
+                    <td class="p-3 text-center text-amber-400">${grand.dpo}</td>
+                    <td class="p-3 text-center">${grand.meninggal}</td>
+                    <td class="p-3"></td>
+                </tr>
+            `;
+        }
+
+        function editUnitFromTable(unitName) {
+            let roleVal = SATKER_POLDA.includes(unitName) ? `POLDA_${unitName}` : `POLRES_${unitName}`;
+            document.getElementById('roleSelector').value = roleVal;
+            switchUserRole(roleVal);
+            showTab('input-data');
+        }
+
+        // Render Status Lists for Super Admin Monitor Tab
+        function renderStatusLists() {
+            if(currentRoleType !== 'super_admin') return;
+
+            const satkerListEl = document.getElementById('satkerStatusList');
+            const polresListEl = document.getElementById('polresStatusList');
+
+            let satkerHtml = '';
+            let polresHtml = '';
+
+            SATKER_POLDA.forEach(name => {
+                let u = unitDataStore[name];
+                satkerHtml += `
+                    <div class="flex items-center justify-between p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-xs">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span class="font-bold text-slate-200">${name}</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-[10px]">
+                            <span class="text-slate-400"><i class="fa-solid fa-users"></i> ${u.polki + u.polwan + u.pns + u.p3k} Psl</span>
+                            <span class="text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"><i class="fa-solid fa-check"></i> Updated ${u.lastUpdate}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            SATWIL_POLRES.forEach(name => {
+                let u = unitDataStore[name];
+                polresHtml += `
+                    <div class="flex items-center justify-between p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-xs">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span class="font-bold text-cyan-300">${name}</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-[10px]">
+                            <span class="text-slate-400"><i class="fa-solid fa-users"></i> ${u.polki + u.polwan + u.pns + u.p3k} Psl</span>
+                            <span class="text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"><i class="fa-solid fa-check"></i> Updated ${u.lastUpdate}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            satkerListEl.innerHTML = satkerHtml;
+            polresListEl.innerHTML = polresHtml;
+        }
+
+        // WhatsApp Text Generator (Super Admin Only)
+        function generateWaText() {
+            const t = calculateGrandTotals();
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const headerStyle = document.getElementById('waHeaderStyle').value;
+
+            let text = "";
+
+            if(headerStyle === "pimpinan") {
+                text += `*YTH. KAPOLDA SULTRA*\n`;
+                text += `*YTH. WAKAPOLDA SULTRA*\n`;
+                text += `*DARI: KARO SDM POLDA SULTRA*\n\n`;
+            } else if(headerStyle === "sdm") {
+                text += `*LAPORAN HARIAN SITUASI PERSONEL BIRO SDM POLDA SULTRA*\n`;
+            } else {
+                text += `*SITUM PERSONEL POLDA SULTRA DAN JAJARAN*\n`;
+            }
+
+            text += `*SITUASI UMUM PERSONEL POLDA SULTRA DAN JAJARAN*\n`;
+            text += `*UPDATE HARI/TGL: ${dateStr.toUpperCase()} (PKL ${timeStr} WITA)*\n`;
+            text += `===================================\n\n`;
+
+            text += `▶️ *1. JUMLAH PERSONEL : ${t.totalPersonel.toLocaleString('id-ID')} orang*\n`;
+            text += `   - POLKI: ${t.polki.toLocaleString('id-ID')} orang\n`;
+            text += `   - POLWAN: ${t.polwan.toLocaleString('id-ID')} orang\n`;
+            text += `   - PNS: ${t.pns.toLocaleString('id-ID')} orang\n`;
+            text += `   - P3K: ${t.p3k.toLocaleString('id-ID')} orang\n\n`;
+
+            text += `▶️ *2. SAKIT MENAHUN : ${t.sakitMenahun} Orang*\n`;
+            text += `▶️ *3. AKTIF DINAS DAN BEROBAT JALAN : ${t.berobatJalan} Orang*\n`;
+            text += `▶️ *4. PERSONEL TUGAS KHUSUS : ${t.tugasKhusus} Orang*\n`;
+            text += `▶️ *5. PERSONEL BKO : ${t.bkoLuar + t.bkoInternal} Orang*\n`;
+            text += `   - BKO Luar Polda (e.g. NTT/Mabes): ${t.bkoLuar} Orang\n`;
+            text += `   - BKO Lingkup Internal Polda: ${t.bkoInternal} Orang\n`;
+            text += `▶️ *6. PERSONEL DPO : ${t.dpo} Orang*\n`;
+            text += `▶️ *7. MENINGGAL DUNIA : ${t.meninggal === 0 ? '-' : t.meninggal} Orang*\n\n`;
+
+            text += `===================================\n`;
+            text += `*CATATAN:* Status Input: 43 / 43 Satker & Satwil Telah Memperbarui Data Laporan.\n\n`;
+            text += `DUM. Terima Kasih. 🙏\n`;
+
+            document.getElementById('waPreviewBox').innerText = text;
+            return text;
+        }
+
+        function sendToWhatsAppWeb() {
+            const text = generateWaText();
+            const targetPhone = document.getElementById('targetWaNumber').value.replace(/[^0-9]/g, '');
+
+            let url = targetPhone ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}` : `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+
+            window.open(url, '_blank');
+            showToast("Membuka WhatsApp...");
+        }
+
+        function triggerQuickWaShare() {
+            showTab('wa-export');
+            sendToWhatsAppWeb();
+        }
+
+        function copyWaText() {
+            const text = generateWaText();
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast("Format teks WA berhasil disalin ke clipboard!");
+        }
+
+        // Populate Form Satker Selection
+        function populateFormSatkerOptions() {
+            const select = document.getElementById('formSatkerSelect');
+            select.innerHTML = '';
+
+            if(currentRoleType === 'super_admin') {
+                let optGroupPolda = document.createElement('optgroup');
+                optGroupPolda.label = "-- 28 SATKER POLDA SULTRA --";
+                SATKER_POLDA.forEach(s => {
+                    let opt = document.createElement('option');
+                    opt.value = s;
+                    opt.innerText = `SATKER: ${s}`;
+                    optGroupPolda.appendChild(opt);
+                });
+
+                let optGroupPolres = document.createElement('optgroup');
+                optGroupPolres.label = "-- 15 SATWIL POLRES JAJARAN --";
+                SATWIL_POLRES.forEach(p => {
+                    let opt = document.createElement('option');
+                    opt.value = p;
+                    opt.innerText = `SATWIL: ${p}`;
+                    optGroupPolres.appendChild(opt);
+                });
+
+                select.appendChild(optGroupPolda);
+                select.appendChild(optGroupPolres);
+
+                select.disabled = false;
+                loadSatkerDataToForm(select.value || "RO SDM");
+            } else {
+                let opt = document.createElement('option');
+                opt.value = currentUnitKey;
+                opt.innerText = `UNIT SAYA: ${currentUnitKey}`;
+                select.appendChild(opt);
+                select.disabled = true;
+
+                loadSatkerDataToForm(currentUnitKey);
+            }
+        }
+
+        // Load unit data into input fields
+        function loadSatkerDataToForm(unitName) {
+            const data = unitDataStore[unitName];
+            if(!data) return;
+
+            document.getElementById('inPolki').value = data.polki;
+            document.getElementById('inPolwan').value = data.polwan;
+            document.getElementById('inPns').value = data.pns;
+            document.getElementById('inP3k').value = data.p3k;
+            document.getElementById('inSakitMenahun').value = data.sakitMenahun;
+            document.getElementById('inBerobatJalan').value = data.berobatJalan;
+            document.getElementById('inTugasKhusus').value = data.tugasKhusus;
+            document.getElementById('inBkoLuar').value = data.bkoLuar;
+            document.getElementById('inBkoInternal').value = data.bkoInternal;
+            document.getElementById('inDpo').value = data.dpo;
+            document.getElementById('inMeninggal').value = data.meninggal;
+            document.getElementById('inNotes').value = data.notes || '';
+            document.getElementById('lastUpdatedNote').innerText = `Terakhir Diperbarui: ${data.lastUpdate || 'Hari ini'}`;
+
+            calculateFormTotal();
+        }
+
+        function calculateFormTotal() {
+            let p1 = parseInt(document.getElementById('inPolki').value) || 0;
+            let p2 = parseInt(document.getElementById('inPolwan').value) || 0;
+            let p3 = parseInt(document.getElementById('inPns').value) || 0;
+            let p4 = parseInt(document.getElementById('inP3k').value) || 0;
+
+            let total = p1 + p2 + p3 + p4;
+            document.getElementById('formTotalCalculated').innerText = `${total.toLocaleString('id-ID')} Orang`;
+        }
+
+        function renderOperatorSummaryBox() {
+            const container = document.getElementById('operatorSummaryBoxes');
+            if(!container) return;
+
+            let data = unitDataStore[currentUnitKey];
+            if(!data) {
+                data = { polki: 0, polwan: 0, pns: 0, p3k: 0, sakitMenahun: 0, berobatJalan: 0, tugasKhusus: 0, bkoLuar: 0, bkoInternal: 0, dpo: 0, meninggal: 0 };
+            }
+
+            let total = data.polki + data.polwan + data.pns + data.p3k;
+
+            container.innerHTML = `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 text-[10px] block">Total Personel</span>
+                    <span class="text-base font-black text-amber-400">${total} Psl</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 text-[10px] block">Sakit Menahun</span>
+                    <span class="text-base font-black text-rose-400">${data.sakitMenahun} Orang</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 text-[10px] block">Berobat Jalan</span>
+                    <span class="text-base font-black text-blue-400">${data.berobatJalan} Orang</span>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="text-slate-400 text-[10px] block">Tugas Khusus / BKO</span>
+                    <span class="text-base font-black text-purple-400">${data.tugasKhusus + data.bkoLuar + data.bkoInternal} Orang</span>
+                </div>
+            `;
+        }
+
+        // Handle Form Submit
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const unitName = document.getElementById('formSatkerSelect').value;
+
+            const nowStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            unitDataStore[unitName] = {
+                name: unitName,
+                type: SATKER_POLDA.includes(unitName) ? 'POLDA' : 'POLRES',
+                polki: parseInt(document.getElementById('inPolki').value) || 0,
+                polwan: parseInt(document.getElementById('inPolwan').value) || 0,
+                pns: parseInt(document.getElementById('inPns').value) || 0,
+                p3k: parseInt(document.getElementById('inP3k').value) || 0,
+                sakitMenahun: parseInt(document.getElementById('inSakitMenahun').value) || 0,
+                berobatJalan: parseInt(document.getElementById('inBerobatJalan').value) || 0,
+                tugasKhusus: parseInt(document.getElementById('inTugasKhusus').value) || 0,
+                bkoLuar: parseInt(document.getElementById('inBkoLuar').value) || 0,
+                bkoInternal: parseInt(document.getElementById('inBkoInternal').value) || 0,
+                dpo: parseInt(document.getElementById('inDpo').value) || 0,
+                meninggal: parseInt(document.getElementById('inMeninggal').value) || 0,
+                notes: document.getElementById('inNotes').value || '',
+                lastUpdate: `Hari ini, ${nowStr}`
+            };
+
+            saveDataStore();
+
+            if(currentRoleType === 'super_admin') {
+                updateDashboardCards();
+                renderMainRekapTable();
+                renderStatusLists();
+                generateWaText();
+            } else {
+                renderOperatorSummaryBox();
+            }
+
+            showToast(`Data Laporan Personel ${unitName} Berhasil Disimpan!`);
+        }
+
+        function resetFormFields() {
+            if(currentRoleType === 'super_admin') {
+                loadSatkerDataToForm(document.getElementById('formSatkerSelect').value);
+            } else {
+                loadSatkerDataToForm(currentUnitKey);
+            }
+        }
+
+        // Tab View Switching Logic
+        function showTab(tabId) {
+            // Guard: Block operators from seeing super admin tabs
+            if(currentRoleType !== 'super_admin' && (tabId === 'dashboard' || tabId === 'wa-export' || tabId === 'status-satker')) {
+                showToast("Akses Ditolak: Fitur hanya untuk Super Admin!");
+                return;
+            }
+
+            document.querySelectorAll('[id^="tab-content-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500', 'text-slate-950', 'shadow-md', 'shadow-amber-500/20');
+                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+            });
+
+            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+                activeBtn.classList.add('bg-amber-500', 'text-slate-950', 'shadow-md', 'shadow-amber-500/20');
+            }
+
+            if(tabId === 'wa-export') {
+                generateWaText();
+            }
+        }
+
+        // Render Chart.js
+        function renderCharts(t) {
+            // Chart 1: Bar Situasi Personel
+            const ctx1 = document.getElementById('chartSituasiPersonel').getContext('2d');
+            if(chartSituasi) chartSituasi.destroy();
+
+            chartSituasi = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Sakit Menahun', 'Berobat Jalan', 'Tugas Khusus', 'BKO Luar', 'BKO Internal', 'DPO', 'Meninggal'],
+                    datasets: [{
+                        label: 'Jumlah Personel (Orang)',
+                        data: [t.sakitMenahun, t.berobatJalan, t.tugasKhusus, t.bkoLuar, t.bkoInternal, t.dpo, t.meninggal],
+                        backgroundColor: [
+                            '#F43F5E', '#3B82F6', '#A855F7', '#10B981', '#10B981', '#F59E0B', '#94A3B8'
+                        ],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { display: false } },
+                        y: { ticks: { color: '#94A3B8' }, grid: { color: '#1E293B' } }
+                    }
+                }
+            });
+
+            // Chart 2: Doughnut Golongan
+            const ctx2 = document.getElementById('chartGolongan').getContext('2d');
+            if(chartGolongan) chartGolongan.destroy();
+
+            chartGolongan = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['POLKI', 'POLWAN', 'PNS', 'P3K'],
+                    datasets: [{
+                        data: [t.polki, t.polwan, t.pns, t.p3k],
+                        backgroundColor: ['#D4AF37', '#FB7185', '#60A5FA', '#34D399'],
+                        borderWidth: 2,
+                        borderColor: '#0F172A'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Show Toast Message
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Initialization
+        window.onload = function() {
+            document.getElementById('formDateInput').value = new Date().toISOString().split('T')[0];
+
+            initDataStore();
+            buildRoleSelectorOptions();
+            switchUserRole("SA_1");
+        };
+    </script>
+</body>
+</html>
